@@ -185,13 +185,168 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>beer_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://bcdanl.github.io/data/beer_markets_all.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>How Do the Prices Per Fluid Ounce Vary from One Brand to Another? Analyzing price per fluid ounce across brands is crucial for both consumers and businesses within the beer industry. Customers are always looking to get the most out of their purchases, and comparing the cost per fluid ounce of various beer brands helps them identify which brands are the best deals on beer. This is crucial for consumers on a tight budget who might value quantity above brand awareness. Thus, they can make informed purchasing decisions using this information. Moreover, the analysis can also help with market segmentation. By understanding how price impacts various consumer groups, businesses can tailor marketing and promotions. For instance, to draw customers, a retailer may decide to price some goods cheaply or to give premium brands larger margins. If data indicates that a particular beer brand has a higher price point than rivals, a grocery store chain may choose to launch a promotion on it to draw in more consumers or boost sales volume. In public policy, regulatory authorities may also find this data useful to evaluate possible price gouging or to ensure fair competition. Below, I use the R code to calculate the average price per fluid ounce for each brand of beer and standard deviation to see how much the price per fluid ounce varies within each brand. The R code to calculate these is as follows:</p>
+<p>How Do the Prices Per Fluid Ounce Vary from One Brand to Another? Analyzing price per fluid ounce across brands is crucial for both consumers and businesses within the beer industry. Customers are always looking to get the most out of their purchases, and comparing the cost per fluid ounce of various beer brands helps them identify which brands are the best deals on beer. This is crucial for consumers on a tight budget who might value quantity above brand awareness. Thus, they can make informed purchasing decisions using this information. Moreover, the analysis can also help with market segmentation. By understanding how price impacts various consumer groups, businesses can tailor marketing and promotions. For instance, to draw customers, a retailer may decide to price some goods cheaply or to give premium brands larger margins. If data indicates that a particular beer brand has a higher price point than rivals, a grocery store chain may choose to launch a promotion on it to draw in more consumers or boost sales volume. In public policy, regulatory authorities may also find this data useful to evaluate possible price gouging or to ensure fair competition.</p>
+<p>Below, I use the R code to calculate the average price per fluid ounce for each brand of beer and standard deviation to see how much the price per fluid ounce varies within each brand. The R code to calculate these is as follows:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>summary_by_brand <span class="ot">&lt;-</span> beer_data <span class="sc">%&gt;%</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(brand) <span class="sc">%&gt;%</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summarize</span>(<span class="at">mean_price_floz =</span> <span class="fu">mean</span>(price_per_floz),</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">sd_price_floz =</span> <span class="fu">sd</span>(price_per_floz))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>The box plot shows the distribution of price per fluid ounce for each brand of beer. This allows us to see the median (middle value of a dataset), upper (75th percentile), lower quartiles (25th percentile), minimum and maximum, and outliers for each brand (data points that significantly differ from the rest of the data). In addition to this, this boxplot also helps us to see if there are any outliers (data points that significantly differ from the rest of the data). The R code to create the boxplot is as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(beer_data, <span class="fu">aes</span>(<span class="at">x =</span> brand, <span class="at">y =</span> price_per_floz)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Price per Fluid Ounce by Brand"</span>, <span class="at">x =</span> <span class="st">"Brand"</span>, <span class="at">y =</span> <span class="st">"Price (USD per fl.oz.)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="project_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>For data transformation, the outliers can be removed from the dataset as extreme values can skew the results and impact measures like mean and standard deviation.</p>
+<p>How does Total Sales vary across different brands? In this section, we will calculate the total amount spent on each brand and visualize the data using a bar plot. Additionally, we will provide summary statistics such as mean and standard deviation of the total amount spent per brand.</p>
+<p>Calculate the total amount spent per brand:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>summary_by_brand <span class="ot">&lt;-</span> beer_data <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(brand) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summarize</span>(<span class="at">total_spent =</span> <span class="fu">sum</span>(dollar_spent, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">mean_spent =</span> <span class="fu">mean</span>(dollar_spent, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">sd_spent =</span> <span class="fu">sd</span>(dollar_spent, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(summary_by_brand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 4
+  brand         total_spent mean_spent sd_spent
+  &lt;chr&gt;               &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;
+1 BUD LIGHT         309653.       14.3     9.03
+2 BUSCH LIGHT       113953.       13.1     8.13
+3 COORS LIGHT       189541.       14.5     8.35
+4 MILLER LITE       248963.       14.5     9.04
+5 NATURAL LIGHT     145246.       11.5     8.10</code></pre>
+</div>
+</div>
+<p>The bar plot will show the total amount spent on each brand.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>total_spent_by_brand <span class="ot">&lt;-</span> beer_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(brand) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summarize</span>(<span class="at">total_spent =</span> <span class="fu">sum</span>(dollar_spent, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(total_spent_by_brand, <span class="fu">aes</span>(<span class="at">x =</span> brand, <span class="at">y =</span> total_spent, <span class="at">fill =</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>brand)) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Total Amount Spent by Brand"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="at">x =</span> <span class="st">"Brand"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="at">y =</span> <span class="st">"Total Amount Spent ($)"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="at">fill =</span> <span class="st">"Brand"</span>) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="project_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see by analyzing this data, that price is not a major driving factor for beer consumers. We know this because even though Busch light and Natural light have the cheapest beer in terms of price per fluid ounce, they come up short being the two lowest brands in terms of total sales.</p>
+<p>What is the favorite beer of each state? The following is the R code used to answer this question.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>top_brands <span class="ot">&lt;-</span> beer_data <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(state, brand) <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(<span class="at">total_sales =</span> <span class="fu">sum</span>(dollar_spent)) <span class="sc">|&gt;</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">top_n</span>(<span class="dv">1</span>, total_sales) <span class="sc">|&gt;</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">arrange</span>(state)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This is the first 10 rows of the data set I created to show the favorite brand by state.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>top_brands <span class="ot">&lt;-</span> top_brands <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">region =</span> <span class="fu">str_to_lower</span>(state))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>mappedbrand <span class="ot">&lt;-</span> <span class="fu">merge</span>(top_brands, <span class="fu">map_data</span>(<span class="st">"state"</span>), <span class="at">by =</span> <span class="st">"region"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I merged the beer data set to a data set which includes the latitude and longitude of every state in America, so that I could add the top brand data onto a map.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a> mappedbrand<span class="sc">$</span>brand <span class="ot">&lt;-</span> tools<span class="sc">::</span><span class="fu">toTitleCase</span>(<span class="fu">tolower</span>(mappedbrand<span class="sc">$</span>brand))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggplot</span>(<span class="at">data =</span> mappedbrand, <span class="fu">aes</span>(<span class="at">x=</span>long, <span class="at">y=</span>lat, <span class="at">fill=</span>brand, <span class="at">group=</span>group)) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_polygon</span>(<span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">scale_fill_discrete</span>(<span class="at">name =</span> <span class="st">"Favorite Brand"</span>) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"The Lower 48's Favorite Beer"</span>) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme</span>(<span class="at">axis.title.x=</span><span class="fu">element_blank</span>(), <span class="at">axis.text.x=</span><span class="fu">element_blank</span>(),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a> <span class="at">axis.ticks.x=</span><span class="fu">element_blank</span>(), <span class="at">axis.title.y=</span><span class="fu">element_blank</span>(),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a> <span class="at">axis.text.y=</span><span class="fu">element_blank</span>(), <span class="at">axis.ticks.y=</span><span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="project_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This is the map of the United States. Each state’s color corresponds to their favorite brand of beer.</p>
+<p>How much does each can cost, per pack size? The following is the R code used to answer this question.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a> beer_data<span class="sc">$</span>packsize <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">d"</span>, beer_data<span class="sc">$</span><span class="st">`</span><span class="at">_purchase_desc</span><span class="st">`</span>) ,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">gsub</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">D"</span>,<span class="st">""</span>, beer_data<span class="sc">$</span><span class="st">`</span><span class="at">_purchase_desc</span><span class="st">`</span>) ,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>First I converted the “_purchase_desc” variable into a numeric variable by taking the numeric value (which indicated the size of the pack bought) and removing the rest of the characters in each value. This created a new variable called “packsize”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a> cans_only <span class="ot">&lt;-</span> beer_data <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">filter</span>(container <span class="sc">==</span> <span class="st">"CAN"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a> pricebyquant <span class="ot">&lt;-</span> cans_only <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">select</span>(packsize, quantity, dollar_spent) <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">mutate</span>(<span class="at">packprice =</span> dollar_spent <span class="sc">/</span> quantity)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a> avg_pricing <span class="ot">&lt;-</span> pricebyquant <span class="sc">|&gt;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a> <span class="fu">group_by</span>(packsize) <span class="sc">|&gt;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a> <span class="fu">summarise</span>(<span class="at">avg_price =</span> <span class="fu">mean</span>(packprice)) <span class="sc">|&gt;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">arrange</span>(packsize)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a> avg_pricing <span class="ot">&lt;-</span> avg_pricing <span class="sc">|&gt;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a> <span class="fu">mutate</span>(<span class="at">can_price =</span> avg_price <span class="sc">/</span> packsize)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This shows the average price of each sized pack or beers, and the average price per can for each pack size</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>all_canprice <span class="ot">&lt;-</span> pricebyquant <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">mutate</span>(<span class="at">cans =</span> packprice <span class="sc">/</span> packsize)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">ggplot</span>(all_canprice, <span class="fu">aes</span>(<span class="at">x =</span> packsize, <span class="at">y =</span> cans)) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_smooth</span>() <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Can Price by Pack Size"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a> <span class="at">y =</span> <span class="st">"Price Per Can"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a> <span class="at">x =</span> <span class="st">"Pack Size"</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a> <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="project_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This is a visualization of the price per can, as the packsize goes up. Generally the more beers you buy, the cheaper each can tends to be.</p>
+<p>Favorite Beer Brands by Buyer Type What are Men’s Favorite Beer Brands? Below is the R code used to answer what brand of beer men bought the most.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df_sum <span class="ot">&lt;-</span> beer_data <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(buyertype <span class="sc">==</span> <span class="st">'male'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(brand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Bud Light is the most popular, Miller Lite second, Natural Light third, Coors Light fourth, then Busch Light is last for men.</p>
+<p>What are Married Couples’ Favorite Beer Brands? Below is the R code used to answer what brand of beer married couples bought the most.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df_married <span class="ot">&lt;-</span> beer_data <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(buyertype <span class="sc">==</span> <span class="st">'married'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(brand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Bud Light is the most popular, Miller Lite second, Coors Light third, Natural Light fourth, then Busch Light is last for married couples.</p>
+<p>What are Female’s Favorite Beer Brands? Below is the R code used to answer what brand of beer females bought the most.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_sum <span class="ot">&lt;-</span> beer_data <span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(buyertype <span class="sc">==</span> <span class="st">'female'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(brand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Bud Light is the most popular, Natural Lite second, Miller Light third, Coors Light fourth, then Busch Light is last for females.</p>
+<p>Using this information, we deduce that Bud Light is the favorite beer brand for men, women, and married couples.</p>
+<p>Works Cited 1. https://umu.diva-portal.org/smash/get/diva2:1833378/FULLTEXT03.pdf 2. https://www.geeksforgeeks.org/boxplots-in-r-language/ 3. https://www.statology.org/summary-statistics-in-r-dplyr/</p>
 
 
 
