@@ -2,9 +2,9 @@
   {
     "objectID": "project.html",
     "href": "project.html",
-    "title": "DANL Project",
+    "title": "DANL 200-02: Beer Market Data Analysis",
     "section": "",
-    "text": "About this project 👏\n\n1 + 1\n\n[1] 2"
+    "text": "beer_data &lt;- read_csv(\"https://bcdanl.github.io/data/beer_markets_all.csv\")\n\nHow Do the Prices Per Fluid Ounce Vary from One Brand to Another? Analyzing price per fluid ounce across brands is crucial for both consumers and businesses within the beer industry. Customers are always looking to get the most out of their purchases, and comparing the cost per fluid ounce of various beer brands helps them identify which brands are the best deals on beer. This is crucial for consumers on a tight budget who might value quantity above brand awareness. Thus, they can make informed purchasing decisions using this information. Moreover, the analysis can also help with market segmentation. By understanding how price impacts various consumer groups, businesses can tailor marketing and promotions. For instance, to draw customers, a retailer may decide to price some goods cheaply or to give premium brands larger margins. If data indicates that a particular beer brand has a higher price point than rivals, a grocery store chain may choose to launch a promotion on it to draw in more consumers or boost sales volume. In public policy, regulatory authorities may also find this data useful to evaluate possible price gouging or to ensure fair competition. Below, I use the R code to calculate the average price per fluid ounce for each brand of beer and standard deviation to see how much the price per fluid ounce varies within each brand. The R code to calculate these is as follows:\n\nsummary_by_brand &lt;- beer_data %&gt;%\ngroup_by(brand) %&gt;%\nsummarize(mean_price_floz = mean(price_per_floz),\nsd_price_floz = sd(price_per_floz))"
   },
   {
     "objectID": "project.html#summary-statistics",

@@ -1,12 +1,11 @@
 ---
-title: DANL Project
-subtitle: "Data-Driven Mastery: Unlocking Business Potential"
+title: "DANL 200-02: Beer Market Data Analysis"
+subtitle: "Final Project"
 author: 
-  - Name 1
-  - Name 2
-  - Name 3
-  - Name 4
-  - Name 5
+  - Jayden Hewitt
+  - Syed Zahoor Raza
+  - Andre Bianchi
+  - Eric Smith
 
 toc: true
 toc-title: "Table of Contents"
@@ -43,50 +42,31 @@ theme_set(theme_ipsum()+
           )
 ```
 
-
-
-# Introduction
-
-About this project :clap:
-
 ```{r}
-1 + 1
+beer_data <- read_csv("https://bcdanl.github.io/data/beer_markets_all.csv")
 ```
 
-
-# Data
-
-The data.frame `mpg` contains a subset of the fuel economy data that the EPA makes available on [https://fueleconomy.gov/](https://fueleconomy.gov/). It contains only models which had a new release every year between 1999 and 2008 - this was used as a proxy for the popularity of the car. :oncoming_automobile:
-
-
-## Summary Statistics
-
+How Do the Prices Per Fluid Ounce Vary from One
+Brand to Another?
+Analyzing price per fluid ounce across brands is crucial for both consumers and businesses within
+the beer industry. Customers are always looking to get the most out of their purchases, and
+comparing the cost per fluid ounce of various beer brands helps them identify which brands are the
+best deals on beer. This is crucial for consumers on a tight budget who might value quantity above
+brand awareness. Thus, they can make informed purchasing decisions using this information.
+Moreover, the analysis can also help with market segmentation. By understanding how price impacts
+various consumer groups, businesses can tailor marketing and promotions. For instance, to draw
+customers, a retailer may decide to price some goods cheaply or to give premium brands larger
+margins. If data indicates that a particular beer brand has a higher price point than rivals, a grocery
+store chain may choose to launch a promotion on it to draw in more consumers or boost sales
+volume. In public policy, regulatory authorities may also find this data useful to evaluate possible
+price gouging or to ensure fair competition.
+Below, I use the R code to calculate the average price per fluid ounce for each brand of beer and
+standard deviation to see how much the price per fluid ounce varies within each brand. The R code
+to calculate these is as follows:
 ```{r}
-mpg <- ggplot2::mpg
+summary_by_brand <- beer_data %>%
+group_by(brand) %>%
+summarize(mean_price_floz = mean(price_per_floz),
+sd_price_floz = sd(price_per_floz))
 ```
-
-```{r}
-#| results: asis
-#| echo: false
-rmarkdown::paged_table(mpg) 
-```
-
-
-```{r}
-skim(mpg) %>% 
-  select(-n_missing)
-```
-
-
-## MPG and a Type of Cars
-The following boxplot shows how the distribution of highway MPG (`hwy`) varies by a type of cars (`class`) :blue_car: :truck: :minibus:.
-
-
-```{r}
-ggplot(data = mpg) +
-  geom_boxplot(aes(x = class, y = hwy, fill = class),
-               show.legend = F) +
-  labs(x = "Class", y = "Highway\nMPG") 
-```
-
 
