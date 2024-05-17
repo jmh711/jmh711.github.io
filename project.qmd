@@ -61,11 +61,10 @@ The box plot shows the distribution of price per fluid ounce for each brand of b
 The R code to create the boxplot is as follows:
 
 ```{r}
+install.packages(ggplot2)
 ggplot(beer_data, aes(x = brand, y = price_per_floz)) +
 geom_boxplot() +
-labs(title = “Price per Fluid Ounce by Brand”,
-x = “Brand”,
-y = “Price (USD per fl.oz.)”)
+labs(title = "Price per Fluid Ounce by Brand", x = "Brand", y = "Price (USD per fl.oz.)")
 ```
 
 For data transformation, the outliers can be removed from the dataset as extreme values can skew the results and impact measures like mean and standard deviation.
@@ -108,21 +107,17 @@ What is the favorite beer of each state?
 The following is the R code used to answer this question.
 
 ```{r}
-top_brands <- beer_data 
-group_by(state, brand) 
-summarise(total_sales = sum(dollar_spent)) 
-top_n(1, total_sales) 
+top_brands <- beer_data |> 
+group_by(state, brand) |> 
+summarise(total_sales = sum(dollar_spent)) |> 
+top_n(1, total_sales) |> 
 arrange(state)
 ```
 
 This is the first 10 rows of the data set I created to show the favorite brand by state.
 ```{r}
-install.packages("maps")
-install.packages("mapdata")
  State <- map_data("state")
- top_brands$state <- tolower(top_brands$state)
- top_brands <- top_brands |>
- rename(region = state)
+ top_brands$state <- tolower(top_brands$region)
 mappedbrand <- merge(top_brands, State, by = "region")
 ```
 I merged the beer data set to a data set which includes the latitude and longitude of every state in America, so that I could add the top brand data onto a map.
